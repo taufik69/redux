@@ -1,66 +1,36 @@
 /**
- * Todo 1 : take a one state like count
- * todo 2 : Need a action for every action like increment , decrement , reset
- * todo 3 : Need a reducer function ,
- * todo 4 : Make a store , using the help of redux createStore()
+ * Todo 1 : payload experiment
  */
 
-// State , it is a object
-
-const initialCount = {
-  count: 0,
+// user State State , it is a object
+const initialuser = {
+  user: [{ name: "taufik" }],
 };
 
 // Now make a action action is an object also
 
-// Take a action  globally
-const INCREMENT = "INCREMENT";
-const DECREMENT = "DECREMENT";
-const RESET = "RESET";
+// for user
+const ADDUSER = "ADDUSER";
 
-const Increment = () => {
+// make a user Action funciton
+
+const User = (user) => {
   return {
-    type: INCREMENT,
+    type: ADDUSER,
+    payload: user,
   };
 };
 
-const Decrement = () => {
-  return {
-    type: DECREMENT,
-  };
-};
-
-const Reset = () => {
-  return {
-    type: RESET,
-  };
-};
-
-/**
- * Now Time to make a Reducer Fucntion  , mind it reducer function is a pure Fucntion
- * @param (state , action)  //state can be initial state
- */
-
-const CounterReducer = (state = initialCount, action) => {
+const UserReducer = (userState = initialuser, action) => {
   switch (action.type) {
-    case INCREMENT:
+    case ADDUSER:
       return {
-        ...state,
-        count: state.count + 1,
-      };
-    case DECREMENT:
-      return {
-        ...state,
-        count: state.count - 1,
-      };
-    case RESET:
-      return {
-        ...state,
-        count: (state.count = 0),
+        ...userState, // {user: [ {name: "taufik"}]} make this type of object
+        user: [...userState.user, action.payload], // user : [...userstate.user , action.paylod]  --> make {name:"taufik"}  action.paylod--> another object lilke {name : "islam"}
       };
 
     default:
-      return state;
+      return userState;
   }
 };
 
@@ -71,15 +41,15 @@ const CounterReducer = (state = initialCount, action) => {
 
 const { createStore } = require("redux");
 
-const store = createStore(CounterReducer);
+const store = createStore(UserReducer);
 
 store.subscribe(() => {
   console.log(store.getState());
 });
 
-store.dispatch(Increment());
-store.dispatch(Increment());
-store.dispatch(Increment());
-store.dispatch(Increment());
-store.dispatch(Decrement());
-store.dispatch(Reset());
+store.dispatch(User({ name: "islam" }));
+store.dispatch(User({ name: "sorna" }));
+store.dispatch(User({ name: "Mithila" }));
+store.dispatch(User({ name: "Sarmin" }));
+store.dispatch(User({ name: "Nabila" }));
+store.dispatch(User({ name: "Dola" }));
