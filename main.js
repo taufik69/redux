@@ -1,28 +1,23 @@
 /**
- * Number 1 : define a initaial state like object
- * Number 2 : dispatch a action , action means you have a increment button  when click this button then action dispatch to reducer
- * Number 3 : reducer , reducer takes a action types and works with action type , for example : action arise in increment then
- *            reducer incremnet ta state value
+ * Todo 1 : take a one state like count
+ * todo 2 : Need a action for every action like increment , decrement , reset
+ * todo 3 : Need a reducer function ,
+ * todo 4 : Make a store , using the help of redux createStore()
  */
 
-const { createStore } = require("redux");
-// actionType : INCREMENT
-const INCREMENT = "INCREMENT";
-const DECREMENT = "DECREMENT";
-const Add_User = "Add_User";
+// State , it is a object
 
-// state
-const initialCountState = {
+const initialCount = {
   count: 0,
 };
 
-const initailUser = {
-  users: [{ name: "Taufik islam" }],
-};
+// Now make a action action is an object also
 
-// action is a object . it's take two things , type and payload
+// Take a action  globally
+const INCREMENT = "INCREMENT";
+const DECREMENT = "DECREMENT";
+const RESET = "RESET";
 
-// now you can use a funciton for managing action object
 const Increment = () => {
   return {
     type: INCREMENT,
@@ -35,52 +30,56 @@ const Decrement = () => {
   };
 };
 
-const AddUser = () => {
+const Reset = () => {
   return {
-    type: Add_User,
-    payload: { name: "masud" },
+    type: RESET,
   };
 };
 
 /**
- * NOW makes a Reducer function , Reducer function is pure function , Pure funciton means this funciton must take an input and must gives a
- * output , that's why this function is a pure fucntion
+ * Now Time to make a Reducer Fucntion  , mind it reducer function is a pure Fucntion
+ * @param (state , action)  //state can be initial state
  */
 
-const incrementReducer = (state = initialCountState, action) => {
+const CounterReducer = (state = initialCount, action) => {
   switch (action.type) {
-    case INCREMENT: {
+    case INCREMENT:
       return {
         ...state,
         count: state.count + 1,
       };
-    }
-    case DECREMENT: {
+    case DECREMENT:
       return {
         ...state,
         count: state.count - 1,
       };
-    }
-    default: {
+    case RESET:
+      return {
+        ...state,
+        count: (state.count = 0),
+      };
+
+    default:
       return state;
-    }
   }
 };
 
 /**
- * Finally We create the store , and this createStore takes a reducer function
- * createStore have some funcitn like dispathch() ,subscribe() and getStore()
+ * Now time to make a store , store takes a reducer
+ * store have servaral method like subscribe() , dispatch() and  getState()
  */
 
-const store = createStore(incrementReducer);
+const { createStore } = require("redux");
+
+const store = createStore(CounterReducer);
+
 store.subscribe(() => {
   console.log(store.getState());
 });
 
-// now dispatch the data to reducer
-store.dispatch(Increment());
 store.dispatch(Increment());
 store.dispatch(Increment());
 store.dispatch(Increment());
 store.dispatch(Increment());
 store.dispatch(Decrement());
+store.dispatch(Reset());
