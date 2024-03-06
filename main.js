@@ -1,55 +1,91 @@
 /**
- * Todo 1 : payload experiment
+ * Product initialization
  */
+const { createStore, combineReducers } = require("redux");
+const GETPRODUCT = "GETPRODUCT";
+const ADDPRODUCT = "ADDPRODUCT";
 
-// user State State , it is a object
-const initialuser = {
-  user: [{ name: "taufik" }],
+const ADDTOCART = "ADDTOCART";
+const initailCart = {
+  product: [],
+  count: 0,
 };
 
-// Now make a action action is an object also
-
-// for user
-const ADDUSER = "ADDUSER";
-
-// make a user Action funciton
-
-const User = (user) => {
+const INITIALPRODUCT = {
+  product: ["hello ", "world", "pritibi"],
+  count: 3,
+};
+const getProduct = () => {
   return {
-    type: ADDUSER,
-    payload: user,
+    type: GETPRODUCT,
   };
 };
 
-const UserReducer = (userState = initialuser, action) => {
+const AddProduct = (payload) => {
+  return {
+    type: ADDPRODUCT,
+    payload: payload,
+  };
+};
+
+//Make a Action for Add to cart
+const AddtoCart = (payload) => {
+  return {
+    type: ADDTOCART,
+    payload: payload,
+  };
+};
+
+// make a reducer function to make action
+
+const ProductReducer = (state = INITIALPRODUCT, action) => {
   switch (action.type) {
-    case ADDUSER:
+    case ADDPRODUCT:
       return {
-        ...userState, // {user: [ {name: "taufik"}]} make this type of object
-        user: [...userState.user, action.payload], // user : [...userstate.user , action.paylod]  --> make {name:"taufik"}  action.paylod--> another object lilke {name : "islam"}
+        ...state,
+        count: state.count + 1,
+        product: [...state.product, action.payload],
+      };
+    case GETPRODUCT:
+      return {
+        product: [...state.product],
       };
 
     default:
-      return userState;
+      return state;
   }
 };
 
-/**
- * Now time to make a store , store takes a reducer
- * store have servaral method like subscribe() , dispatch() and  getState()
- */
+// make another reducer
+const CartReducer = (state = initailCart, action) => {
+  switch (action.type) {
+    case ADDTOCART:
+      return {
+        ...state,
+        product: [...state.product, action.payload],
+        count: state.count + 1,
+      };
 
-const { createStore } = require("redux");
+    default:
+      return state;
+  }
+};
 
-const store = createStore(UserReducer);
+// make a store
+
+// combine all reducer
+const rootReducer = combineReducers({
+  productR: ProductReducer,
+  cartR: CartReducer,
+});
+const store = createStore(rootReducer);
 
 store.subscribe(() => {
   console.log(store.getState());
 });
 
-store.dispatch(User({ name: "islam" }));
-store.dispatch(User({ name: "sorna" }));
-store.dispatch(User({ name: "Mithila" }));
-store.dispatch(User({ name: "Sarmin" }));
-store.dispatch(User({ name: "Nabila" }));
-store.dispatch(User({ name: "Dola" }));
+store.dispatch(AddProduct("taufik"));
+store.dispatch(AddProduct("taufik1"));
+store.dispatch(AddProduct("taufik2"));
+store.dispatch(AddProduct("taufik3"));
+store.dispatch(AddtoCart("Mango"));
