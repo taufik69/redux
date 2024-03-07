@@ -1,37 +1,17 @@
 /**
  * Product initialization
  */
-const { createStore, combineReducers } = require("redux");
-const GETPRODUCT = "GETPRODUCT";
-const ADDPRODUCT = "ADDPRODUCT";
+const { createStore } = require("redux");
 
-const ADDTOCART = "ADDTOCART";
-const initailCart = {
-  product: [],
-  count: 0,
-};
+const ADDPRODUCT = "ADDPRODUCT";
 
 const INITIALPRODUCT = {
   product: ["hello ", "world", "pritibi"],
   count: 3,
 };
-const getProduct = () => {
-  return {
-    type: GETPRODUCT,
-  };
-};
-
-const AddProduct = (payload) => {
+const addProduct = (payload) => {
   return {
     type: ADDPRODUCT,
-    payload: payload,
-  };
-};
-
-//Make a Action for Add to cart
-const AddtoCart = (payload) => {
-  return {
-    type: ADDTOCART,
     payload: payload,
   };
 };
@@ -46,25 +26,6 @@ const ProductReducer = (state = INITIALPRODUCT, action) => {
         count: state.count + 1,
         product: [...state.product, action.payload],
       };
-    case GETPRODUCT:
-      return {
-        product: [...state.product],
-      };
-
-    default:
-      return state;
-  }
-};
-
-// make another reducer
-const CartReducer = (state = initailCart, action) => {
-  switch (action.type) {
-    case ADDTOCART:
-      return {
-        ...state,
-        product: [...state.product, action.payload],
-        count: state.count + 1,
-      };
 
     default:
       return state;
@@ -73,19 +34,10 @@ const CartReducer = (state = initailCart, action) => {
 
 // make a store
 
-// combine all reducer
-const rootReducer = combineReducers({
-  productR: ProductReducer,
-  cartR: CartReducer,
-});
-const store = createStore(rootReducer);
+const store = createStore(ProductReducer);
 
 store.subscribe(() => {
   console.log(store.getState());
 });
 
-store.dispatch(AddProduct("taufik"));
-store.dispatch(AddProduct("taufik1"));
-store.dispatch(AddProduct("taufik2"));
-store.dispatch(AddProduct("taufik3"));
-store.dispatch(AddtoCart("Mango"));
+store.dispatch(addProduct("taufik"));
