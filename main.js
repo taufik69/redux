@@ -93,15 +93,23 @@ const fetchData = () => {
     axios
       .get(API_URL)
       .then((res) => {
-        return res;
+        const data = res.data;
+        const allTitle = data.map((item) => item.title);
+        return allTitle;
       })
       .then((data) => {
-        console.log(data);
+        // console.log(data[0]);
+        dispatch(getTodoSucess(data));
       })
       .catch((err) => {
-        console.log(err);
+        dispatch(getTodoFailed(err.message));
       });
   };
 };
 
 store.dispatch(fetchData());
+/**
+ * when call fetchData then store.dispatch get a middleware function . this function called by thunk
+ * middleware , this middleware pass the dispatch function then we call the all action using this dispatch
+ * function
+ */
