@@ -1,43 +1,107 @@
 /**
- * Product initialization
+ * async actions --api calling
+ * api url :https://jsonplaceholder.typicode.com/todos
+ * middleware : redux thunk
+ * axios api
  */
-const { applyMiddleware, createStore } = require("redux");
-const { logger } = require("redux-logger");
-const ADDPRODUCT = "ADDPRODUCT";
 
-const INITIALPRODUCT = {
-  product: ["hello ", "world", "pritibi"],
-  count: 3,
+const { createStore, applyMiddleware } = require("redux");
+const { thunk } = require("redux-thunk");
+const axios = require("axios");
+/**
+ * todo1 : 1st make a initail state
+ * todo2 : 2nd of all makes a action
+ * todo3 : 3rd of all makes a all reducer fucntion to works with each acitons
+ * todo4 : 4th of all makes a stroe
+ */
+
+// CONSTAINSTS
+
+const GET_TODO_REQUEST = "GET_TODO_REQUEST";
+const GET_TODO_SUCESS = "GET_TODO_SUCESS";
+const GET_TODO_FAIED = "GET_TODO_FAIED";
+const API_URL = "https://jsonplaceholder.typicode.com/todos";
+
+// initails state of todos
+const initailTodoStates = {
+  todo: [],
+  isLoading: false,
+  error: null,
 };
-const addProduct = (payload) => {
+
+// actions
+const getTodoRequest = () => {
   return {
-    type: ADDPRODUCT,
-    payload: payload,
+    type: GET_TODO_REQUEST,
   };
 };
 
-// make a reducer function to make action
+const getTodoSucess = (data) => {
+  return {
+    type: GET_TODO_SUCESS,
+    payload: data,
+  };
+};
 
-const ProductReducer = (state = INITIALPRODUCT, action) => {
+const getTodoFailed = (err) => {
+  return {
+    type: GET_TODO_FAIED,
+    payload: err,
+  };
+};
+
+// make a todos reducer for every actions
+const todoReducer = (state = initailTodoStates, action) => {
   switch (action.type) {
-    case ADDPRODUCT:
+    case GET_TODO_REQUEST: {
       return {
         ...state,
-        count: state.count + 1,
-        product: [...state.product, action.payload],
+        isLoading: true,
       };
+    }
+    case GET_TODO_SUCESS: {
+      return {
+        ...state,
+        isLoading: false,
+        todo: action.payload,
+      };
+    }
+    case GET_TODO_FAIED: {
+      return {
+        ...state,
+        isLoading: false,
+        error: action.payload,
+      };
+    }
 
     default:
       return state;
   }
 };
 
-// make a store
-
-const store = createStore(ProductReducer, applyMiddleware(logger));
-
+// store
+const store = createStore(todoReducer, applyMiddleware(thunk));
 store.subscribe(() => {
   console.log(store.getState());
 });
 
-store.dispatch(addProduct("taufik"));
+// now fetching the data with the help of axios
+
+const fetchData = () => {
+  return (dispatch) => {
+    dispatch(getTodoRequest());
+    axios
+      .get(API_URL)
+      .then((res) => {
+        return res;
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+};
+
+store.dispatch(fetchData());
