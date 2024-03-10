@@ -1,8 +1,8 @@
 /**
  * Product initialization
  */
-const { createStore } = require("redux");
-
+const { applyMiddleware, createStore } = require("redux");
+const { logger } = require("redux-logger");
 const ADDPRODUCT = "ADDPRODUCT";
 
 const INITIALPRODUCT = {
@@ -34,7 +34,7 @@ const ProductReducer = (state = INITIALPRODUCT, action) => {
 
 // make a store
 
-const store = createStore(ProductReducer);
+const store = createStore(ProductReducer, applyMiddleware(logger));
 
 store.subscribe(() => {
   console.log(store.getState());
